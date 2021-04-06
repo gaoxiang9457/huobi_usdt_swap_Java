@@ -6,9 +6,17 @@ import com.huobi.api.request.account.SwapLiquidationOrdersRequest;
 import com.huobi.api.request.account.SwapMarketHistoryKlineRequest;
 import com.huobi.api.response.market.*;
 import com.huobi.api.service.market.MarketAPIServiceImpl;
+import org.apache.commons.csv.CSVFormat;
+import org.apache.commons.csv.CSVRecord;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runners.MethodSorters;
+
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.Reader;
+import java.util.HashMap;
+import java.util.Map;
 
 @FixMethodOrder(MethodSorters.JVM)
 public class MarketAPITest implements BaseTest {
@@ -17,10 +25,30 @@ public class MarketAPITest implements BaseTest {
 
 
     @Test
+    public void givenCSVFile_whenRead_thenContentsAsExpected() throws IOException {
+        Reader in = new FileReader("book.csv");
+        Map<String, String> AUTHOR_BOOK_MAP = new HashMap() {
+            {
+                put("Dan Simmons", "Hyperion");
+                put("Douglas Adams", "The Hitchhiker's Guide to the Galaxy");
+            }
+        };
+        String[] HEADERS = {"author", "title"};
+        Iterable<CSVRecord> records = CSVFormat.DEFAULT
+                .withHeader(HEADERS)
+                .withFirstRecordAsHeader()
+                .parse(in);
+        for (CSVRecord record : records) {
+            String author = record.get("author");
+            String title = record.get("title");
+        }
+    }
+
+    @Test
     public void getSwapContractInfo() {
         SwapContractInfoResponse result =
-                huobiAPIService.getSwapContractInfo("BTC-USDT", "all");
-        logger.debug("1.获取合约信息：{}", JSON.toJSONString(result));
+                huobiAPIService.getSwapContractInfo(/*"BTC-USDT"*/"", "all");
+        logger.debug("1.获取合约信息：{}", result);
     }
 
 
@@ -208,8 +236,8 @@ public class MarketAPITest implements BaseTest {
     }
 
     @Test
-    public void getSwapBatchFundingRate(){
-        SwapBatchFundingRateResponse response=huobiAPIService.getSwapBatchFundingRate("");
-        logger.debug("27、批量获取合约资金费率:{}",JSON.toJSONString(response));
+    public void getSwapBatchFundingRate() {
+        SwapBatchFundingRateResponse response = huobiAPIService.getSwapBatchFundingRate("");
+        logger.debug("27、批量获取合约资金费率:{}", JSON.toJSONString(response));
     }
 }

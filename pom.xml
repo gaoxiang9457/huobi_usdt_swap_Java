@@ -94,7 +94,11 @@
             <artifactId>Java-WebSocket</artifactId>
             <version>1.4.0</version>
         </dependency>
-
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-csv</artifactId>
+            <version>1.4</version>
+        </dependency>
     </dependencies>
 
 </project>

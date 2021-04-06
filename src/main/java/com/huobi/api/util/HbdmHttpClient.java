@@ -2,6 +2,7 @@ package com.huobi.api.util;
 
 import com.alibaba.fastjson.JSON;
 import com.huobi.api.exception.HttpRequestException;
+import lombok.extern.slf4j.Slf4j;
 import okhttp3.*;
 import org.apache.commons.collections4.MapUtils;
 
@@ -11,7 +12,7 @@ import java.security.cert.CertificateException;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
-
+@Slf4j
 public class HbdmHttpClient {
 
     private OkHttpClient httpClient;
@@ -35,6 +36,8 @@ public class HbdmHttpClient {
 
 
     public String doGet(String url, Map<String, Object> params) {
+        long start = System.currentTimeMillis();
+
         Request.Builder reqBuild = new Request.Builder();
         HttpUrl.Builder urlBuilder = HttpUrl.parse(url).newBuilder();
         if (MapUtils.isNotEmpty(params)) {
@@ -45,10 +48,13 @@ public class HbdmHttpClient {
         reqBuild.url(urlBuilder.build());
 
         Response response = null;
+
         try {
             response = httpClient.newCall(reqBuild.build()).execute();
         } catch (IOException e) {
             throw new HttpRequestException("http执行异常，url=" + url, e);
+        } finally {
+            log.info("cost1 (second) :{}", (System.currentTimeMillis() - start) );
         }
         if (response.isSuccessful()) {
             try {

@@ -1,12 +1,12 @@
 package com.huobi.api.service.market;
 
 import com.alibaba.fastjson.JSON;
-import com.huobi.api.swaps.HuobiLinearSwapAPIConstants;
 import com.huobi.api.exception.ApiException;
 import com.huobi.api.request.account.LinearSwapBasisRequest;
 import com.huobi.api.request.account.SwapLiquidationOrdersRequest;
 import com.huobi.api.request.account.SwapMarketHistoryKlineRequest;
 import com.huobi.api.response.market.*;
+import com.huobi.api.swaps.HuobiLinearSwapAPIConstants;
 import com.huobi.api.util.HbdmHttpClient;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -17,7 +17,9 @@ import java.util.Map;
 
 public class MarketAPIServiceImpl implements MarketAPIService {
 
-    String url_prex = "https://api.hbdm.com";
+    //    String url_prex = "https://api.hbdm.com";
+    String url_prex = "https://api.btcgateway.pro";
+
     Logger logger = LoggerFactory.getLogger(getClass());
 
     @Override
@@ -32,7 +34,7 @@ public class MarketAPIServiceImpl implements MarketAPIService {
                 params.put("support_margin_mode", supportMarginMode);
             }
             body = HbdmHttpClient.getInstance().doGet(url_prex + HuobiLinearSwapAPIConstants.SWAP_CONTRACT_INFO, params);
-            logger.debug("body:{}", body);
+//            logger.debug("body:{}", body);
             SwapContractInfoResponse response = JSON.parseObject(body, SwapContractInfoResponse.class);
             if ("ok".equalsIgnoreCase(response.getStatus())) {
                 return response;
